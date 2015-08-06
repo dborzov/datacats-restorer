@@ -1,0 +1,24 @@
+web:
+  image: datacats/web
+  command: /scripts/web.sh True True False
+  ports:
+    - "5000:5000"
+  volumes:
+    - files:/var/www/storage
+    - web.sh:/scripts/web.sh
+    - project:/project
+    - development.ini:/project/development.ini
+    - adjust_devini.py:/scripts/adjust_devini.py
+    - venv:/usr/lib/ckan
+  links:
+    - solr:solr
+    - db:db
+
+db:
+  build: postgres/
+
+solr:
+  image: datacats/solr
+  volumes:
+   - solr:/var/lib/solr
+   - project/schema.xml:/etc/solr/conf/schema.xml
